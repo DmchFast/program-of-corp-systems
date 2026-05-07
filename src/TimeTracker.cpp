@@ -2,6 +2,9 @@
 #include <iostream>
 #include <limits>
 #include <iomanip>
+#include <sstream>
+#include <ctime>
+#include <algorithm>
 
 using namespace std;
 
@@ -208,14 +211,66 @@ void TimeTracker::showPeriodReport()
    cin >> from;
    cout << "Конечная дата (ДД-ММ-ГГГГ): ";
    cin >> to;
+
+   // парсинг дат
+   tm tmFrom = {}, tmTo = {};
+   istringstream sf(from), st(to);
+   sf >> get_time(&tmFrom, "%d-%m-%Y");
+   st >> get_time(&tmTo, "%d-%m-%Y");
+   if (sf.fail() || st.fail())
+   {
+      cout << "Неверный формат даты.\n";
+      return;
+   }
+
+   //* преаброзование начала и конца суток
+   tmFrom.tm_hour = 0;
+   tmFrom.tm_min = 0;
+   tmFrom.tm_sec = 0;
+   tmTo.tm_hour = 23;
+   tmTo.tm_min = 59;
+   tmTo.tm_sec = 59;
+
+   time_t periodStart = mktime(&tmFrom);
+   time_t periodEnd = mktime(&tmTo);
+
    cout << "\n~ Отчёт за период ~\n";
-   // вывод общего времени
    for (const auto &task : tasks)
    {
-      long long sec = task.totalDuration();
-      long long h = sec / 3600, m = (sec % 3600) / 60, s = sec % 60;
-      cout << task.getName() << ": "
-           << h << "ч " << setfill('0') << setw(2) << m << "м "
+      long long totalSec = 0;
+
+      // Суммирование только сессий в диапазоне
+      for (const auto &s : task.getSessions())
+      {
+         if (!s.isFinished())
+            continue;
+
+         string sStart = s.getStartTimeStr(), sEnd = s.getEndTimeStr();
+         tm tmS = {}, tmE = {};
+         istringstream ss(sStart), se(sEnd);
+         ss >> get_time(&tmS, "%d-%m-%Y %H:%M:%S");
+         se >> get_time(&tmE, "%d-%m-%Y %H:%M:%S");
+         if (ss.fail() || se.fail())
+            continue;
+
+         time_t sessStart = mktime(&tmS);
+         time_t sessEnd = mktime(&tmE);
+
+         // скип сессии за пределами диапазона
+         if (sessEnd < periodStart || sessStart > periodEnd)
+            continue;
+
+         time_t overlapStart = max(periodStart, sessStart);
+         time_t overlapEnd = min(periodEnd, sessEnd);
+         totalSec += static_cast<long long>(difftime(overlapEnd, overlapStart));
+      }
+
+      if (totalSec == 0)
+         continue;
+
+      long long h = totalSec / 3600, m = (totalSec % 3600) / 60, s = totalSec % 60;
+      cout << task.getName() << ": " << h << "ч "
+           << setfill('0') << setw(2) << m << "м "
            << setfill('0') << setw(2) << s << "с\n";
    }
 }
