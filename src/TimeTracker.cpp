@@ -1,6 +1,7 @@
 #include "TimeTracker.h"
 #include <iostream>
 #include <limits>
+#include <iomanip>
 
 using namespace std;
 
@@ -186,7 +187,20 @@ void TimeTracker::stopTimer()
    storage->save(tasks, activeTask);
 }
 
-void TimeTracker::showDailyReport() { cout << "Отчёт за сегодня\n"; }
+void TimeTracker::showDailyReport()
+{
+   cout << "\n~ Отчёт за сегодня ~\n";
+   // суммарное время по каждой задаче
+   for (const auto &task : tasks)
+   {
+      long long sec = task.totalDuration();
+      long long h = sec / 3600, m = (sec % 3600) / 60, s = sec % 60;
+      cout << task.getName() << ": "
+           << h << "ч " << setfill('0') << setw(2) << m << "м "
+           << setfill('0') << setw(2) << s << "с\n";
+   }
+}
+
 void TimeTracker::showPeriodReport() { cout << "Отчёт за период\n"; }
 
 void TimeTracker::handleCommand(int choice)
