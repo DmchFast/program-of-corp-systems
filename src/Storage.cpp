@@ -36,7 +36,7 @@ void Storage::save(const std::vector<Task> &tasks, const Task *activeTask)
       }
       j["tasks"].push_back(jTask);
    }
-   ofstream file(filename);
+   ofstream file(filename, std::ios::binary);
    if (file.is_open())
       file << j.dump(4); // читаемость (отступы)
 }
@@ -44,7 +44,7 @@ void Storage::save(const std::vector<Task> &tasks, const Task *activeTask)
 std::vector<Task> Storage::load(Task *&activeTask)
 {
    activeTask = nullptr;
-   ifstream file(filename);
+   ifstream file(filename, std::ios::binary);
    if (!file.is_open())
       return {};
 
