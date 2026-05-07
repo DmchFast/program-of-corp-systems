@@ -106,7 +106,26 @@ void TimeTracker::editTaskName()
    cout << "Задача переименована.\n";
 }
 
-void TimeTracker::deleteTaskById() { cout << "Удалить задачу\n"; }
+void TimeTracker::deleteTaskById()
+{
+   showAllTasks();
+   if (tasks.empty())
+      return;
+   int idx;
+   cout << "Номер задачи для удаления: ";
+   cin >> idx;
+   if (idx < 1 || idx > (int)tasks.size())
+   {
+      cout << "Неверный номер.\n";
+      return;
+   }
+   //* сброс указателя activeTask при удалении активной задачи
+   if (&tasks[idx - 1] == activeTask)
+      activeTask = nullptr;
+   tasks.erase(tasks.begin() + idx - 1); // удаление из вектора
+   storage->save(tasks, activeTask);
+   cout << "Задача удалена.\n";
+}
 
 void TimeTracker::startTimer()
 {
@@ -134,7 +153,7 @@ void TimeTracker::startTimer()
       cout << "Неверный номер.\n";
       return;
    }
-   // Провка на завершённость сессии
+   // Проверка на завершённость сессии
    for (const auto &s : tasks[idx - 1].getSessions())
       if (!s.isFinished())
       {
