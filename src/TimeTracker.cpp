@@ -79,7 +79,33 @@ void TimeTracker::addNewTask()
    cout << "Задача добавлена.\n";
 }
 
-void TimeTracker::editTaskName() { cout << "Редактировать задачу\n"; }
+void TimeTracker::editTaskName()
+{
+   showAllTasks(); // список задач
+   if (tasks.empty())
+      return;
+   int idx;
+   cout << "Номер задачи для редактирования: ";
+   cin >> idx;
+   if (idx < 1 || idx > (int)tasks.size())
+   {
+      cout << "Неверный номер.\n";
+      return;
+   }
+   string newName;
+   cout << "Новое название: ";
+   cin.ignore();
+   getline(cin, newName);
+   if (newName.empty())
+   {
+      cout << "Имя не может быть пустым.\n";
+      return;
+   }
+   tasks[idx - 1].setName(newName);  // переименование задачи
+   storage->save(tasks, activeTask); // сохранение
+   cout << "Задача переименована.\n";
+}
+
 void TimeTracker::deleteTaskById() { cout << "Удалить задачу\n"; }
 
 void TimeTracker::startTimer()
