@@ -11,6 +11,7 @@ using namespace std;
 TimeTracker::TimeTracker() : activeTask(nullptr)
 {
    storage = Storage::getInstance("data.json");
+   tasks = storage->load(activeTask);
 }
 TimeTracker::~TimeTracker() {}
 
