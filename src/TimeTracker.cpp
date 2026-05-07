@@ -201,7 +201,24 @@ void TimeTracker::showDailyReport()
    }
 }
 
-void TimeTracker::showPeriodReport() { cout << "Отчёт за период\n"; }
+void TimeTracker::showPeriodReport()
+{
+   string from, to;
+   cout << "Начальная дата (ДД-ММ-ГГГГ): ";
+   cin >> from;
+   cout << "Конечная дата (ДД-ММ-ГГГГ): ";
+   cin >> to;
+   cout << "\n~ Отчёт за период ~\n";
+   // вывод общего времени
+   for (const auto &task : tasks)
+   {
+      long long sec = task.totalDuration();
+      long long h = sec / 3600, m = (sec % 3600) / 60, s = sec % 60;
+      cout << task.getName() << ": "
+           << h << "ч " << setfill('0') << setw(2) << m << "м "
+           << setfill('0') << setw(2) << s << "с\n";
+   }
+}
 
 void TimeTracker::handleCommand(int choice)
 {
