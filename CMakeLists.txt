@@ -33,4 +33,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
    ${CMAKE_CURRENT_SOURCE_DIR}   # для json.hpp
 )
 
+# Для запуска тестов из `build` при помощи `ctest`.
+enable_testing()
+
 add_subdirectory(tests)
