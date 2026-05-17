@@ -38,4 +38,22 @@ cmake --build build
 .\build\bin\TimeTracker.exe
 ```
 
+## Тестирование 
+
+### Запуск всех тестов сразу (через ctest)
+
+После сборки проекта, находясь в папке build, выполнить:
+
+```bash
+ctest
+```
+### Запуск отдельных тестов
+
+Исполняемые файлы тестов находятся в build/bin/. Можно запустить каждый вручную:
+
+```bash
+.\build\bin\<имя_теста.exe>
+```
+> Файлы тестов: `session_tests.exe`, `task_tests.exe`, `storage_tests.exe`, `timetracker_tests.exe` вставить полностю вместо этого `<имя_теста.exe>`.
+
 ---
