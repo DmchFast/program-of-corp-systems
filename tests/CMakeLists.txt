@@ -37,6 +37,11 @@ target_link_libraries(session_tests PRIVATE Catch2::Catch2WithMain)
 add_executable(task_tests Task_test.cpp ${PROJECT_SOURCES})
 target_link_libraries(task_tests PRIVATE Catch2::Catch2WithMain)
 
+# Тесты для Storage
+add_executable(storage_tests Storage_test.cpp ${PROJECT_SOURCES})
+target_link_libraries(storage_tests PRIVATE Catch2::Catch2WithMain)
+
 # Регистрация тестов для CTest (запуск через ctest)
 add_test(NAME SessionTests COMMAND session_tests)
 add_test(NAME TaskTests COMMAND task_tests)
+add_test(NAME StorageTests COMMAND storage_tests)
