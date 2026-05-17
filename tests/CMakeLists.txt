@@ -41,7 +41,12 @@ target_link_libraries(task_tests PRIVATE Catch2::Catch2WithMain)
 add_executable(storage_tests Storage_test.cpp ${PROJECT_SOURCES})
 target_link_libraries(storage_tests PRIVATE Catch2::Catch2WithMain)
 
+# Тесты для TimeTracker (включая сценарии)
+add_executable(timetracker_tests TimeTracker_test.cpp ${PROJECT_SOURCES})
+target_link_libraries(timetracker_tests PRIVATE Catch2::Catch2WithMain)
+
 # Регистрация тестов для CTest (запуск через ctest)
 add_test(NAME SessionTests COMMAND session_tests)
 add_test(NAME TaskTests COMMAND task_tests)
 add_test(NAME StorageTests COMMAND storage_tests)
+add_test(NAME TimeTrackerTests COMMAND timetracker_tests)
