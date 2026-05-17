@@ -16,6 +16,9 @@ public:
    std::string getEndTimeStr() const;
    void setStartTime(const std::string &str);
    void setEndTime(const std::string &str);
+   
+   std::chrono::system_clock::time_point getStartTime() const { return startTime; }
+   std::chrono::system_clock::time_point getEndTime() const { return endTime; }
 
 private:
    std::chrono::system_clock::time_point startTime;

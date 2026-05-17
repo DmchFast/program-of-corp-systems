@@ -5,45 +5,39 @@
 using namespace std;
 using json = nlohmann::json;
 
-Storage *Storage::instance = nullptr;
-
 Storage::Storage(const std::string &fname) : filename(fname) {}
 
-Storage *Storage::getInstance(const std::string &fname)
+Storage& Storage::getInstance(const std::string &fname)
 {
-   if (!instance)
-      instance = new Storage(fname);
+   static Storage instance(fname);
    return instance;
 }
 
-void Storage::save(const std::vector<Task> &tasks, const Task *activeTask)
+void Storage::save(const std::vector<Task> &tasks, int activeIndex)
 {
    json j;
-   j["active_task_index"] = -1;
+   j["active_task_index"] = activeIndex;   // сохранение индекса
    for (size_t i = 0; i < tasks.size(); ++i)
    {
-      if (activeTask && &tasks[i] == activeTask)
-         j["active_task_index"] = static_cast<int>(i);
-
       json jTask;
       jTask["name"] = tasks[i].getName();
       for (const auto &sess : tasks[i].getSessions())
       {
          json jSess;
          jSess["start"] = sess.getStartTimeStr();
-         jSess["end"] = sess.getEndTimeStr(); //* пустая строка = сессия не завершина
+         jSess["end"] = sess.getEndTimeStr(); //* пустая строка = сессия не завершена
          jTask["sessions"].push_back(jSess);
       }
       j["tasks"].push_back(jTask);
    }
    ofstream file(filename, std::ios::binary);
    if (file.is_open())
-      file << j.dump(4); // читаемость (отступы)
+      file << j.dump(4);
 }
 
-std::vector<Task> Storage::load(Task *&activeTask)
+std::vector<Task> Storage::load(int &activeIndex)
 {
-   activeTask = nullptr;
+   activeIndex = -1;
    ifstream file(filename, std::ios::binary);
    if (!file.is_open())
       return {};
@@ -56,7 +50,7 @@ std::vector<Task> Storage::load(Task *&activeTask)
    catch (...)
    {
       return {};
-   } //* повреждённые файлы игонорируются
+   }
 
    std::vector<Task> tasks;
    if (j.contains("tasks"))
@@ -70,22 +64,23 @@ std::vector<Task> Storage::load(Task *&activeTask)
             {
                Session sess;
                sess.setStartTime(jSess.value("start", ""));
-               sess.setEndTime(jSess.value("end", "")); //* пустая строка = сессия акт
+               sess.setEndTime(jSess.value("end", ""));
                task.addSession(sess);
             }
          }
          tasks.push_back(task);
       }
    }
-   //* по индексу востанавливается актив сессия
+
+   //* восстановление активной задачи по индексу
    if (j.contains("active_task_index"))
    {
       int idx = j["active_task_index"];
       if (idx >= 0 && idx < (int)tasks.size())
-         activeTask = &tasks[idx];
+         activeIndex = idx;
    }
    
-   if (!activeTask)
+   if (activeIndex == -1)
    {
       for (size_t i = 0; i < tasks.size(); ++i)
       {
@@ -93,12 +88,11 @@ std::vector<Task> Storage::load(Task *&activeTask)
          {
             if (!s.isFinished())
             {
-               activeTask = &tasks[i];
+               activeIndex = i;
                break;
             }
          }
-         if (activeTask)
-            break;
+         if (activeIndex != -1) break;
       }
    }
    return tasks;

@@ -8,14 +8,13 @@
 class Storage
 {
 public:
-   //* экземпляр
-   static Storage *getInstance(const std::string &fname = "data.json");
-   void save(const std::vector<Task> &tasks, const Task *activeTask);
-   std::vector<Task> load(Task *&activeTask);
+   static Storage& getInstance(const std::string &fname = "data.json");
+   
+   void save(const std::vector<Task> &tasks, int activeIndex);   // индекс
+   std::vector<Task> load(int &activeIndex);
 
 private:
-   Storage(const std::string &fname = "data.json"); //* приватный конструктор
-   static Storage *instance;
+   Storage(const std::string &fname = "data.json");
    std::string filename;
 };
 

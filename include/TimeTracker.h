@@ -28,8 +28,8 @@ private:
    void showPeriodReport();
 
    std::vector<Task> tasks;
-   Task *activeTask;
-   Storage *storage;
+   int activeIndex;               // индекс активной задачи (-1 = нет активной)
+   Storage& storage;              // ссылка на синглтон
 };
 
 #endif

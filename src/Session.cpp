@@ -21,7 +21,10 @@ void Session::stop()
 long long Session::getDuration() const
 {
    if (isActive)
-      return 0;
+   {
+      auto now = chrono::system_clock::now();
+      return chrono::duration_cast<chrono::seconds>(now - startTime).count();
+   }
    return chrono::duration_cast<chrono::seconds>(endTime - startTime).count();
 }
 
