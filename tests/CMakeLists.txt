@@ -33,5 +33,10 @@ set(PROJECT_SOURCES
 add_executable(session_tests Session_test.cpp ${PROJECT_SOURCES})
 target_link_libraries(session_tests PRIVATE Catch2::Catch2WithMain)
 
+# Тесты для Task
+add_executable(task_tests Task_test.cpp ${PROJECT_SOURCES})
+target_link_libraries(task_tests PRIVATE Catch2::Catch2WithMain)
+
 # Регистрация тестов для CTest (запуск через ctest)
 add_test(NAME SessionTests COMMAND session_tests)
+add_test(NAME TaskTests COMMAND task_tests)
