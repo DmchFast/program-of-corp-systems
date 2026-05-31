@@ -23,7 +23,10 @@
 - Библиотека [nlohmann/json](https://github.com/nlohmann/json) (в проекте `json.hpp`).
 
 
-## Сборка
+
+## Локальный запуск
+
+### Сборка
 
 Из корня проекта выполнить:
 
@@ -32,22 +35,22 @@ cmake -S . -B build
 cmake --build build
 ```
 
-## Запуск
+### Запуск
 
 ```bash
 .\build\bin\TimeTracker.exe
 ```
 
-## Тестирование 
+### Тестирование
 
-### Запуск всех тестов сразу (через ctest)
+#### Запуск всех тестов сразу (через ctest)
 
 После сборки проекта, находясь в папке build, выполнить:
 
 ```bash
 ctest
 ```
-### Запуск отдельных тестов
+#### Запуск отдельных тестов
 
 Исполняемые файлы тестов находятся в build/bin/. Можно запустить каждый вручную:
 
@@ -55,5 +58,46 @@ ctest
 .\build\bin\<имя_теста.exe>
 ```
 > Файлы тестов: `session_tests.exe`, `task_tests.exe`, `storage_tests.exe`, `timetracker_tests.exe` вставить полностю вместо этого `<имя_теста.exe>`.
+
+## Запуск через Docker
+
+### Запуск контейнера
+
+```bash
+docker compose -p timetracker -f docker/docker-compose.yml up -d
+```
+
+Команда собирает образ, создаёт контейнер сервиса `app` и запускает его в фоновом режиме.
+
+### Режим автопересборки
+
+```bash
+docker compose -p timetracker -f docker/docker-compose.yml watch
+```
+
+При частом изменение кода, что бы не пересобирать образ вручную после каждого изменения можно использовать docker compose watch. Держать docker compose watch запущенным в отдельном терминале. В этом режиме изменения будут синхронизироваться автоматически, а пересборка нужна только при изменении файлов, влияющих на образ, например .
+
+### Запуск программы
+
+```bash
+docker compose -p timetracker -f docker/docker-compose.yml run app --rm
+```
+
+### Запуск всех тестов в контейнере
+
+```bash
+docker compose -p timetracker -f docker/docker-compose.yml run --rm tests
+```
+
+### Запуск отдельных тестов
+
+Исполняемые файлы тестов находятся в `build/bin/`. Их можно запускать по одному внутри контейнера:
+
+```bash
+docker compose -p timetracker -f docker/docker-compose.yml run --rm tests ./build/bin/<имя_теста>
+
+```
+
+> Файлы тестов: `session_tests`, `task_tests`, `storage_tests`, `timetracker_tests` вставить полностю вместо этого `<имя_теста>`.
 
 ---
