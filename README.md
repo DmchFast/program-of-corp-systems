@@ -75,7 +75,7 @@ docker compose -p timetracker -f docker/docker-compose.yml up -d
 docker compose -p timetracker -f docker/docker-compose.yml watch
 ```
 
-При частом изменение кода, что бы не пересобирать образ вручную после каждого изменения можно использовать docker compose watch. Держать docker compose watch запущенным в отдельном терминале. В этом режиме изменения будут синхронизироваться автоматически, а пересборка нужна только при изменении файлов, влияющих на образ, например .
+При частом изменение кода, что бы не пересобирать образ вручную после каждого изменения можно использовать docker compose watch. Держать docker compose watch запущенным в отдельном терминале. В этом режиме изменения будут синхронизироваться автоматически, а пересборка нужна только при изменении файлов, влияющих на образ.
 
 ### Запуск программы
 
@@ -83,13 +83,15 @@ docker compose -p timetracker -f docker/docker-compose.yml watch
 docker compose -p timetracker -f docker/docker-compose.yml run app --rm
 ```
 
-### Запуск всех тестов в контейнере
+### Тестирование
+
+#### Запуск всех тестов в контейнере
 
 ```bash
 docker compose -p timetracker -f docker/docker-compose.yml run --rm tests
 ```
 
-### Запуск отдельных тестов
+#### Запуск отдельных тестов
 
 Исполняемые файлы тестов находятся в `build/bin/`. Их можно запускать по одному внутри контейнера:
 
