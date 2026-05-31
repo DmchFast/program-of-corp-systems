@@ -1,0 +1,39 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: runtime
+    image: timetracker:latest
+    pull_policy: never
+    develop:
+      watch:
+        - action: rebuild
+          path: ../src
+        - action: rebuild
+          path: ../include
+        - action: rebuild
+          path: ../tests
+        - action: sync
+          path: ../data.json
+          target: /app/data.json
+        - action: rebuild
+          path: ../json.hpp
+        - action: rebuild
+          path: ../CMakeLists.txt
+        - action: rebuild
+          path: ../docker/Dockerfile
+        - action: rebuild
+          path: ../docker/docker-compose.yml
+    stdin_open: true
+    tty: true
+
+  tests:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: tests
+    image: timetracker-tests:latest
+    pull_policy: never
+    profiles:
+      - test

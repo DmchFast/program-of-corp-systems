@@ -7,8 +7,8 @@ project(TimeTrackerTests)
 include(FetchContent)
 FetchContent_Declare(
     Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG v3.12.0
+    URL https://github.com/catchorg/Catch2/archive/refs/tags/v3.12.0.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(Catch2)
 
