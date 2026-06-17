@@ -1,0 +1,16 @@
+build/
+.git/
+.vscode/
+**/CMakeFiles/
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/compile_commands.json
+**/Testing/
+**/bin/
+**/lib/
+**/*.o
+**/*.obj
+**/*.exe
+**/*.dll
+**/*.a
+**/*.lib
